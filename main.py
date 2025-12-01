@@ -76,7 +76,7 @@ def translate_text(text: str, target_lang: str) -> str:
     return result.text.replace(placeholder, "Issalmou Adaaiche")
 
 
-@app.post("/chat")
+@app.post("/chatbot")
 async def chat_endpoint(request: ChatRequest):
     if gemini_client is None:
         raise HTTPException(
