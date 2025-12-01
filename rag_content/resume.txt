@@ -1,0 +1,51 @@
+=== CURRICULUM VITAE ===
+
+Découvrez mon parcours professionnel et mon parcours académique qui reflètent mon engagement dans le développement web et l'intelligence artificielle.
+
+FORMATION ACADÉMIQUE
+
+Je suis actuellement étudiant en Master Systèmes d'Information et Systèmes Intelligents au sein de l'Institut National de Statistique et d'Économie Appliquée à Rabat, au Maroc. Cette formation avancée me permet d'approfondir mes connaissances en systèmes intelligents et en gestion de l'information.
+
+J'ai obtenu une Licence en Intelligence Artificielle dans le cadre du Programme Excellence à l'Université Hassan II de Casablanca, au Maroc, entre 2024 et 2025. Cette formation m'a permis d'acquérir des bases solides en apprentissage automatique, apprentissage profond et traitement de données.
+
+Mon parcours a débuté avec un diplôme de Technicien Spécialisé en Développement Digital, option Web Full-Stack, obtenu à la Cité des Métiers et des Compétences de Laâyoune, au Maroc, entre 2022 et 2024. Cette formation technique m'a donné les compétences fondamentales pour devenir un développeur web complet.
+
+COMPÉTENCES PROFESSIONNELLES
+
+Mon niveau de maîtrise dans différents domaines reflète mon expertise diversifiée. En développement Frontend, j'ai atteint un niveau de compétence de quatre-vingt-dix pour cent, me permettant de créer des interfaces utilisateur modernes et réactives.
+
+Mon expertise en développement Backend atteint quatre-vingt-quinze pour cent, témoignant de ma capacité à concevoir et implémenter des architectures serveur robustes et performantes.
+
+Dans le domaine des Données et de l'Intelligence Artificielle, mon niveau de compétence s'élève à quatre-vingt-treize pour cent, reflétant ma maîtrise des techniques de Machine Learning, Deep Learning et d'analyse de données.
+
+Pour le Cloud et DevOps, j'ai développé une expertise de quatre-vingt-cinq pour cent, couvrant le déploiement, la gestion d'applications dans le cloud et l'automatisation des processus.
+
+EXPÉRIENCES PROFESSIONNELLES
+
+Stage de Développeur Web Full-Stack à la Polyclinique Internationale de Laâyoune
+
+Durant trois mois, j'ai occupé le poste de stagiaire développeur web Full-Stack au sein de la Polyclinique Internationale de Laâyoune, au Maroc. Cette expérience s'est révélée particulièrement enrichissante et m'a permis de mettre en pratique mes compétences techniques dans un environnement médical professionnel.
+
+J'ai développé une application complète destinée à gérer l'équipe médicale de la clinique. Cette application couvre la gestion des chefs de département, du directeur médical, du directeur des soins et des ressources humaines. Le système facilite la coordination entre ces différents acteurs et optimise les processus de gestion du personnel.
+
+Mon rôle d'intermédiaire entre l'équipe technique et les représentants de la clinique a été crucial pour garantir une communication fluide et efficace. J'ai dû traduire les besoins métier en spécifications techniques tout en m'assurant que les solutions proposées répondaient parfaitement aux attentes des utilisateurs finaux.
+
+Ma participation active à la planification et à la mise en œuvre du projet m'a permis de contribuer significativement à l'optimisation du flux de travail et à l'amélioration de l'efficacité globale de la clinique. Cette expérience m'a appris l'importance de l'écoute, de l'adaptabilité et de la rigueur dans la gestion de projets réels.
+
+Stage en Systèmes Informatiques et Administratifs au Centre Médical Al Hikma
+
+Pendant deux mois, j'ai effectué un stage au Centre Médical Al Hikma de Laâyoune, au Maroc, où j'ai travaillé sur les systèmes informatiques et administratifs de l'établissement.
+
+Ma principale mission consistait à analyser et résoudre les problèmes liés à l'application ZKBiotime, un système de gestion du temps et des présences. J'ai assuré une gestion précise des données en identifiant et corrigeant les incohérences dans le système.
+
+J'ai mis en place des rotations efficaces des départements et créé des comptes dédiés pour optimiser le flux de travail du personnel. Ces améliorations ont permis une meilleure organisation et une répartition plus équitable des tâches entre les différents services.
+
+La formation des responsables de département constituait également une partie importante de mes responsabilités. J'ai organisé et animé des sessions de formation pour garantir une utilisation correcte et efficace du système par tous les utilisateurs.
+
+De manière proactive, j'ai surveillé et corrigé les écarts dans les rapports d'absence et de retard. Cette veille constante a permis d'améliorer la fiabilité des données et de faciliter la prise de décisions managériales basées sur des informations précises.
+
+RÉALISATIONS ET PROJETS
+
+Du développement web aux applications alimentées par l'intelligence artificielle, mes projets reflètent créativité, résolution de problèmes et innovation. Chaque réalisation témoigne de ma capacité à transformer des concepts en solutions fonctionnelles et efficaces.
+
+Mon portfolio comprend des applications web modernes, des solutions basées sur l'intelligence artificielle et des modèles prédictifs. Ces projets démontrent ma polyvalence et ma capacité à m'adapter à différents contextes techniques et métiers.

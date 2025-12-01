@@ -1,0 +1,67 @@
+=== PROJETS ===
+
+Ces projets reflètent mon parcours en tant que développeur, de la conception à la mise en œuvre, témoignant de ma capacité à transformer des concepts en solutions concrètes et innovantes.
+
+AGEP - APPLICATION DE GESTION DES ÉQUIPES PARAMÉDICALES
+
+Réalisé en juillet 2024 pour la Polyclinique Internationale de Laâyoune, ce projet représente une solution complète de gestion des ressources humaines dans le secteur médical.
+
+Cette plateforme web a été conçue pour rationaliser et optimiser la gestion des équipes paramédicales au sein de la Polyclinique Internationale Laayoune. L'objectif principal était de créer un système centralisé permettant d'automatiser les processus de ressources humaines, d'améliorer la communication interne entre les différents acteurs et de faciliter le suivi des performances du personnel médical.
+
+Le défi majeur consistait à créer un système capable de gérer efficacement les horaires, la présence et les performances de l'équipe paramédicale, tout en assurant une communication fluide et transparente entre les chefs de service, le directeur médical, le directeur des soins et le département des ressources humaines. La complexité résidait dans la nécessité de coordonner ces différents niveaux hiérarchiques et de leur fournir des outils adaptés à leurs besoins spécifiques.
+
+La solution développée prend la forme d'une plateforme web complète qui automatise les processus de ressources humaines, organise intelligemment les plannings des équipes et facilite une communication fluide entre tous les intervenants. Le système permet également un suivi précis et continu des performances du personnel paramédical, offrant ainsi aux responsables les outils nécessaires pour prendre des décisions éclairées en matière de gestion des ressources humaines.
+
+Le projet intègre plusieurs fonctionnalités essentielles. L'automatisation des processus RH permet de réduire considérablement le temps consacré aux tâches administratives répétitives. Le système de suivi des performances offre une vision claire et objective du travail accompli par chaque membre de l'équipe. L'authentification sécurisée garantit que seules les personnes autorisées peuvent accéder aux informations sensibles. Les tableaux de bord personnalisables permettent à chaque utilisateur de visualiser les informations les plus pertinentes pour son rôle. Les options d'exportation de données facilitent l'analyse et le reporting. Enfin, la compatibilité multi-appareils assure que le système reste accessible depuis n'importe quel terminal, que ce soit un ordinateur de bureau, une tablette ou un smartphone.
+
+Pour la réalisation technique, j'ai utilisé une stack technologique éprouvée comprenant HTML et CSS pour la structure et le style des pages, Bootstrap pour assurer la réactivité de l'interface, JavaScript pour les interactions dynamiques côté client, Laravel comme framework backend pour la logique métier et la gestion des requêtes, et MySQL pour la base de données relationnelle gérant l'ensemble des informations du système.
+
+ESTICAR - PLATEFORME DE PRÉDICTION DES PRIX DE VOITURES
+
+Développé en mai 2025, EstiCar est un projet innovant exploitant les capacités du machine learning pour résoudre un problème concret du marché automobile.
+
+Ce projet de prédiction des prix de voitures repose sur des algorithmes de machine learning sophistiqués. L'application estime avec précision la valeur d'un véhicule en se basant sur plusieurs caractéristiques déterminantes telles que la marque du véhicule, son modèle spécifique, l'année de mise en circulation, le kilométrage parcouru et d'autres facteurs pertinents influençant le prix sur le marché.
+
+Le système analyse en profondeur les caractéristiques des véhicules pour fournir des estimations de prix précises et fiables. Le processus de développement a nécessité plusieurs phases importantes : la collecte minutieuse de données sur le marché automobile, le nettoyage et la préparation de ces données pour garantir leur qualité, l'entraînement d'un modèle de machine learning avec ces données préparées, et enfin la création d'une interface utilisateur intuitive permettant aux utilisateurs d'obtenir facilement des estimations.
+
+Le défi principal résidait dans le fait que les prix du marché automobile sont dynamiques et influencés par de multiples facteurs interconnectés. Déterminer un prix juste et réaliste pour un véhicule peut s'avérer extrêmement chronophage et incertain, tant pour les acheteurs que pour les vendeurs. Les fluctuations du marché, les tendances locales et les spécificités de chaque véhicule rendent l'estimation manuelle complexe et sujette à l'erreur.
+
+La solution mise en place exploite la puissance du machine learning pour prédire les prix à partir de caractéristiques clés du véhicule. Les utilisateurs peuvent simplement saisir les informations concernant leur véhicule dans l'interface et recevoir instantanément une estimation fiable et basée sur des données réelles du marché. L'interface intuitive rend le processus accessible même aux personnes sans connaissances techniques particulières.
+
+Le projet offre plusieurs avantages significatifs. L'estimation rapide des prix permet d'obtenir une évaluation en quelques secondes seulement. La prise en compte de multiples critères assure une estimation plus précise et nuancée. Le système aide aussi bien à l'achat qu'à la vente en fournissant un point de référence objectif. Les prédictions sont fiables car basées sur l'analyse de vastes ensembles de données réelles. L'outil fait gagner un temps précieux en évitant les recherches manuelles fastidieuses. Enfin, la compatibilité multi-appareils permet d'utiliser le service depuis n'importe quel appareil connecté.
+
+La stack technologique utilisée combine HTML et CSS pour la présentation, Bootstrap pour un design responsive, JavaScript pour l'interactivité côté client, Python pour l'implémentation des algorithmes de machine learning, et Flask comme framework web léger pour servir l'application et gérer les requêtes.
+
+WIREDWAVE - PLATEFORME DE PRODUITS ÉLECTRONIQUES
+
+Développé en janvier 2024, WiredWave illustre ma capacité à créer des expériences e-commerce modernes et performantes.
+
+Ce projet web a été développé avec React.js et utilise l'interface de programmation d'Amazon pour afficher une large gamme de produits électroniques. L'application offre aux utilisateurs la possibilité de parcourir les produits de manière intuitive, d'accéder à un lien d'achat direct pour chaque article, de créer un compte et de se connecter, ainsi que de gérer leur panier d'achat. L'accent a été mis sur la création d'une interface moderne, parfaitement responsive et offrant une expérience utilisateur fluide et agréable.
+
+Le projet intègre de manière transparente l'interface de programmation d'Amazon pour afficher les produits en temps réel. Les utilisateurs peuvent facilement parcourir les articles disponibles, consulter leurs détails, accéder aux liens d'achat directs les redirigeant vers Amazon, créer un compte ou se connecter à leur compte existant, et gérer leur panier d'achat avec ajout, suppression et modification de quantités. Le tout est présenté dans une interface utilisateur moderne et responsive qui s'adapte parfaitement à tous les types d'écrans.
+
+Les plateformes de commerce électronique font souvent face à des défis importants pour fournir une expérience de navigation rapide, intuitive et visuellement attrayante. L'intégration d'interfaces de programmation tierces tout en maintenant des performances optimales, la garantie d'un design responsive sur tous les appareils, et la gestion en temps réel des comptes utilisateurs et des paniers d'achat représentent des défis techniques complexes. De plus, il est essentiel de fournir des données produits précises et des interactions fluides pour maintenir l'engagement des utilisateurs et les encourager à finaliser leurs achats.
+
+La solution adoptée exploite la puissance de React.js pour créer une interface frontend dynamique et hautement responsive, tout en s'appuyant sur l'interface de programmation d'Amazon pour obtenir des données produits actualisées en temps réel. Cette architecture garantit des interactions fluides et une expérience utilisateur de qualité professionnelle.
+
+Le projet offre plusieurs fonctionnalités clés. La navigation dans les produits est optimisée pour permettre une découverte facile et agréable. Les liens directs d'achat facilitent la transition vers la finalisation de l'achat sur Amazon. L'authentification des utilisateurs sécurise l'accès aux fonctionnalités personnalisées. La gestion du panier permet aux utilisateurs de préparer leurs achats de manière organisée. L'expérience utilisateur fluide garantit des transitions rapides et sans accroc. Enfin, la compatibilité multi-appareils assure que l'expérience reste excellente quel que soit le terminal utilisé.
+
+Les technologies utilisées pour ce projet incluent HTML et CSS pour la structure et le style, Bootstrap pour faciliter la création d'un design responsive, et React.js comme framework JavaScript moderne pour construire l'interface utilisateur dynamique et réactive.
+
+SPEECHLY - TRANSCRIPTION VOCALE INTELLIGENTE
+
+Développé en juillet 2025, Speechly démontre mon expertise dans le domaine du traitement du langage naturel et de l'intelligence artificielle appliquée.
+
+Ce projet utilise des technologies avancées de conversion de la parole en texte pour transformer des fichiers audio en texte écrit. L'application permet aux utilisateurs de télécharger leurs fichiers audio, d'obtenir des transcriptions automatiques et précises, et de visualiser les résultats de manière claire et structurée. Le projet met particulièrement l'accent sur la précision de la transcription et sur une interface utilisateur conviviale et accessible.
+
+Le système convertit efficacement les enregistrements audio en texte écrit avec une grande précision. Le rendu est clair et lisible, facilitant l'utilisation du texte transcrit. L'ensemble du processus est conçu avec un focus particulier sur l'ergonomie et la simplicité d'utilisation, permettant à tout utilisateur, même sans compétences techniques, d'obtenir rapidement une transcription de qualité.
+
+La conversion de la parole en texte présente de nombreux défis techniques et pratiques. Le système doit être capable de gérer différents accents régionaux, des vitesses de parole variables allant du débit lent au débit rapide, la présence de bruit de fond qui peut masquer certains mots, et des qualités audio diverses allant du studio professionnel à l'enregistrement amateur. Il est crucial d'assurer une transcription précise tout en maintenant une interface intuitive et facile à utiliser pour garantir une expérience utilisateur fluide. Les utilisateurs ont besoin d'une solution capable de transformer rapidement et de manière fiable l'audio en texte sans nécessiter de connaissances techniques particulières.
+
+Le projet répond à ces défis en mettant en œuvre des algorithmes avancés de conversion de la parole en texte, capables de comprendre divers patterns vocaux et de s'adapter à différentes conditions audio. Les utilisateurs peuvent simplement télécharger leurs fichiers audio ou enregistrer directement depuis l'application et recevoir instantanément des transcriptions précises. Le design intuitif de l'application la rend accessible à tous, permettant une conversion rapide, fiable et sans effort de la parole en texte.
+
+Le projet intègre plusieurs fonctionnalités essentielles. La transcription automatique traite le fichier audio sans intervention manuelle. La haute précision garantit des résultats fiables même dans des conditions audio difficiles. La fonctionnalité d'enregistrement audio permet de créer des transcriptions en temps réel. Le téléversement de fichiers audio offre la flexibilité de traiter des enregistrements existants. L'outil fait gagner un temps considérable comparé à la transcription manuelle. Enfin, la compatibilité multi-appareils permet d'utiliser le service depuis n'importe où.
+
+La stack technologique comprend HTML et CSS pour la structure et le design, Bootstrap pour l'aspect responsive, JavaScript pour les interactions dynamiques, et Python pour l'implémentation des algorithmes de traitement du langage et de reconnaissance vocale.
+
+Chacun de ces projets témoigne de ma capacité à identifier des problèmes réels, à concevoir des solutions techniques appropriées et à les implémenter avec succès en utilisant les technologies les plus adaptées. De la gestion d'équipes médicales à la prédiction de prix par intelligence artificielle, en passant par le commerce électronique et le traitement du langage naturel, ces réalisations illustrent la diversité de mes compétences et mon engagement à créer des solutions qui apportent une réelle valeur ajoutée aux utilisateurs.
