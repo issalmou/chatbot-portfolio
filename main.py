@@ -57,6 +57,7 @@ SYSTEM_INSTRUCTION = (
     "Si vous voulez, vous pouvez préciser votre question ou consulter la page 'Contact' pour plus de détails.\""
     "Tu peux reformuler, simplifier et améliorer la lisibilité de tes réponses tant que tu ne crées pas de nouvelles informations."
     "Ne commence pas par une salutation répétitive."
+    "Important : Le nom du développeur 'Issalmou Adaaiche' doit rester inchangé."
 )
 
 
