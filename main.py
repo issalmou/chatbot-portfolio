@@ -58,6 +58,7 @@ SYSTEM_INSTRUCTION = (
     "Tu peux reformuler, simplifier et améliorer la lisibilité de tes réponses tant que tu ne crées pas de nouvelles informations."
     "Ne commence pas par une salutation répétitive."
     "Important : Le nom du développeur 'Issalmou Adaaiche' doit rester inchangé."
+    "Réponds uniquement à la question, dans la même langue que la question de l’utilisateur."
 )
 
 
