@@ -6,7 +6,7 @@ from embeddings import embed_text
 load_dotenv() 
 
 chroma_client = chromadb.PersistentClient( #initialiser un objet de chromaDB persistant
-    path="./chromadb"  # le path de fichier qu'on va stocker la base vectorielle 
+    path="/tmp/chromadb"  # le path de fichier qu'on va stocker la base vectorielle 
 )
 # Le paramètre 'path' pointe vers le répertoire où les données seront stockées.
 
