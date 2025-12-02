@@ -51,3 +51,32 @@ Je conçois et gère des bases SQL et NoSQL :
 L'optimisation de la performance est une préoccupation constante dans mon travail. Je veille particulièrement aux temps de chargement, aux transitions fluides et à l'expérience utilisateur globale, car ces éléments sont cruciaux pour la satisfaction des utilisateurs finaux.
 
 Mes compétences me permettent de construire, innover et résoudre des problèmes réels dans le monde digital. Que ce soit pour développer une application web moderne, créer une solution basée sur l'intelligence artificielle, ou concevoir un modèle prédictif, je suis prêt à transformer vos idées en réalité.
+
+--- Définitions et explications des technologies ---
+
+- HTML5 : Langage qui sert à créer et organiser le contenu des pages web, comme les titres, paragraphes et images.
+- CSS3 : Langage qui permet de styliser les pages web en ajoutant couleurs, polices, tailles, et mises en page.
+- Tailwind CSS : Outil qui aide à construire facilement des interfaces web modernes en utilisant des classes prédéfinies.
+- Bootstrap : Framework CSS qui simplifie la création de sites web responsives et visuellement harmonieux.
+- JavaScript : Langage qui rend les sites web interactifs, comme les boutons cliquables, animations ou formulaires dynamiques.
+- React.js : Bibliothèque qui permet de créer des interfaces web interactives et rapides en composants réutilisables.
+- Next.js : Extension de React qui facilite le rendu rapide des pages web et améliore leur visibilité sur les moteurs de recherche.
+- Node.js : Outil qui permet d’exécuter du JavaScript côté serveur pour gérer des sites ou applications web complètes.
+- Express.js : Framework pour créer facilement des serveurs et des APIs avec Node.js.
+- PHP : Langage utilisé pour générer des pages web dynamiques et gérer des données côté serveur.
+- Laravel : Framework PHP qui simplifie la création de sites web modernes et sécurisés.
+- Symfony : Framework PHP robuste pour construire des applications web complexes et modulaires.
+- MySQL : Base de données qui stocke et organise les informations sous forme de tableaux liés entre eux.
+- Oracle : Système de base de données performant et utilisé pour gérer de grandes quantités d’informations.
+- MongoDB : Base de données qui stocke les données sous forme de documents, pratique pour des contenus flexibles.
+- Git : Outil qui garde l’historique des modifications du code et facilite le travail en équipe.
+- GitHub : Plateforme qui héberge les projets Git et permet de collaborer facilement avec d’autres développeurs.
+- Visual Studio / VS Code : Logiciels pour écrire, organiser et tester le code facilement.
+- Scrum : Méthode de gestion de projet qui aide les équipes à travailler efficacement et organiser les tâches par étapes.
+- XAMPP : Serveur local qui permet de tester des sites web sur son ordinateur avant de les publier en ligne.
+- Vercel / Netlify / AWS : Services qui permettent de publier et héberger des sites web et applications sur Internet.
+- Machine Learning : Branche de l’IA qui apprend des données pour faire des prédictions ou prendre des décisions automatiquement.
+- Deep Learning : Type de Machine Learning qui utilise des réseaux complexes pour analyser des données comme des images ou textes.
+- Python : Langage de programmation simple et polyvalent, très utilisé pour l’intelligence artificielle et l’analyse de données.
+- TensorFlow : Outil pour créer et entraîner des modèles d’IA capables d’analyser et comprendre les données.
+- SEO : Ensemble de techniques qui permettent à un site web d’être plus visible et mieux classé sur Google et autres moteurs de recherche.
