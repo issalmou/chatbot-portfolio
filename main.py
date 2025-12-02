@@ -7,6 +7,19 @@ from dotenv import load_dotenv
 from google import genai
 import rag
 from langdetect import detect
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "https://issalmouad.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 
