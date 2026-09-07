@@ -1,0 +1,5 @@
+# requirements-dev.txt — dépendances de développement/test uniquement,
+# non installées dans l'image Docker de production.
+
+-r requirements.txt
+pytest==9.1.1

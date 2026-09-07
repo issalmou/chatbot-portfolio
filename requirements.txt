@@ -1,0 +1,14 @@
+# requirements.txt
+
+fastapi==0.129.0
+uvicorn==0.40.0
+python-dotenv==1.2.1
+pydantic==2.12.5
+pydantic-settings==2.14.0
+python-multipart==0.0.22
+chromadb==1.5.9
+google-genai==1.52.0
+sentence-transformers==6.0.1
+httpx==0.28.1
+langdetect==1.0.9
+json5==0.15.0
