@@ -188,6 +188,23 @@ def test_cross_language_retrieval_finds_french_chunk_for_shared_topic(seeded_sto
     assert result.metrics["retrieved_chunks"] > 0
 
 
+def test_specific_project_question_suggests_its_detail_page_route(seeded_store, fake_embedder):
+    # "AGEP" est résolu comme entité précise (app/rag/memory.py) : la route
+    # suggérée doit pointer vers sa page dédiée, pas la liste générale des
+    # projets (sinon le LLM répond à tort qu'aucun lien direct n'existe).
+    manager, _ = _manager()
+    result = answer_question("Tell me about project AGEP.", embedder=fake_embedder, store=seeded_store, manager=manager)
+    assert result.metrics["suggested_route"] == "/project/agep"
+
+
+def test_general_projects_question_suggests_the_listing_page_route(five_projects_store, fake_embedder):
+    # Question portant sur PLUSIEURS projets (exhaustive) : aucune page de
+    # détail unique n'a de sens, la route générale reste correcte.
+    manager, _ = _manager()
+    result = answer_question("List all his projects", embedder=fake_embedder, store=five_projects_store, manager=manager)
+    assert result.metrics["suggested_route"] == "/projects"
+
+
 def test_protected_name_is_preserved_through_generation(seeded_store, fake_embedder):
     manager, _ = _manager(reply="⟦ISSALMOU_ADAAICHE⟧ est développeur.")
     result = answer_question("Qui est Issalmou Adaaiche ?", embedder=fake_embedder, store=seeded_store, manager=manager)

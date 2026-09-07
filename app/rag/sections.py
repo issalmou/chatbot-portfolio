@@ -103,11 +103,15 @@ def detect_ambiguous(query: str, lang: str) -> bool:
     return bool(pattern and pattern.search(query))
 
 
-def route_for_topic(topic: str | None) -> str | None:
-    """Route réelle pour un sujet, ou None si le sujet n'a délibérément pas
-    de destination (ex. "certification") ou n'est pas reconnu."""
+def route_for_topic(topic: str | None, project_entity_id: str | None = None) -> str | None:
+    """Route réelle pour un sujet, ou None si délibérément sans destination
+    (ex. "certification") ou non reconnu. Avec un `project_entity_id`
+    (projet précis identifié), pointe vers sa page dédiée (`/project/<id>`,
+    route React Router réelle) plutôt que la liste générale."""
     if not topic or topic in _NO_ROUTE_TOPICS:
         return None
+    if topic == "projects" and project_entity_id:
+        return f"/project/{project_entity_id}"
     return SECTION_ROUTES.get(topic)
 
 

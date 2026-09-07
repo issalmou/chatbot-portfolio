@@ -64,7 +64,12 @@ SYSTEM_INSTRUCTION = (
     "CONTEXTE, dis-le simplement et naturellement, en variant ta formulation "
     "d'une réponse à l'autre plutôt que de répéter toujours la même phrase "
     "figée. Si une variable SUGGESTED_SECTION_URL est fournie ci-dessous, tu "
-    "PEUX mentionner cette section comme piste complémentaire, naturellement. "
+    "PEUX mentionner cette section comme piste complémentaire, naturellement "
+    "— et si la question demande explicitement un LIEN, une URL ou une PAGE, "
+    "tu DOIS inclure SUGGESTED_SECTION_URL dans ta réponse, recopiée "
+    "EXACTEMENT telle quelle, caractère pour caractère (jamais traduite, "
+    "jamais mise au singulier/pluriel différemment, par exemple jamais "
+    "\"/projet\" ni \"/projets\" si la valeur fournie est \"/projects\"). "
     "Si AUCUNE SUGGESTED_SECTION_URL n'est fournie, NE PROPOSE AUCUNE section "
     "ni URL de ton invention — dis simplement que l'information n'est pas "
     "disponible. IMPORTANT : une absence d'information dans le CONTEXTE "
@@ -167,14 +172,9 @@ _CLARIFICATION_VARIANTS: dict[str, list[str]] = {
     ],
 }
 
-# Question sur l'identité de l'assistant lui-même ("qui es-tu ?") : jamais le
-# nom brut du chatbot ("Vous parlez avec ChatIssalmou Assistant AI"), toujours
-# une formulation naturelle qui explique son rôle. Court-circuit déterministe
-# AVANT toute résolution de référence/sujet/périmètre (voir answer_question) :
-# ni la conversation ni le contenu du portfolio ne doivent jamais influencer
-# cette réponse. Deux registres par langue (complet / plus direct pour une
-# question très courte) mélangés dans la même liste : _stable_pick() varie
-# naturellement entre les deux selon la question, sans heuristique de longueur.
+# Identité de l'assistant ("qui es-tu ?") : jamais le nom brut du chatbot,
+# toujours une formulation naturelle. Court-circuit AVANT tout le reste (voir
+# answer_question) : jamais influencée par la conversation ou le portfolio.
 _IDENTITY_VARIANTS: dict[str, list[str]] = {
     "fr": [
         "Je suis l'assistant IA du portfolio d'Issalmou. Je peux vous aider à "
@@ -286,10 +286,8 @@ def answer_question(
     lang = detect_language(query)
     metrics["language_detection_ms"] = round((time.perf_counter() - t0) * 1000, 2)
 
-    # Question sur l'identité de l'assistant lui-même : court-circuit avant
-    # TOUT le reste (mémoire, sujet, périmètre, Chroma, LLM) — voir
-    # _IDENTITY_VARIANTS ci-dessus. Jamais influencée par la conversation ni
-    # par le contenu du portfolio, par construction.
+    # Identité de l'assistant : court-circuit avant tout le reste (mémoire,
+    # sujet, périmètre, Chroma, LLM).
     if detect_identity_question(query, lang):
         answer = _stable_pick(_IDENTITY_VARIANTS.get(lang, _IDENTITY_VARIANTS["fr"]), query)
         metrics["intent"] = "identity"
@@ -433,11 +431,20 @@ def answer_question(
         metrics["unique_entities_count"] = len(retrieved)
         metrics["entity_ids"] = [item.get("entity_id") for item in retrieved]
 
-    # Route validée par l'app (jamais par le LLM), uniquement via detect_topic sur la
-    # question elle-même. Pas de fallback sémantique sur l'entity_type du meilleur chunk :
-    # une question hors sujet peut retourner un chunk, et suggérer une route sans rapport
-    # serait pire qu'aucune suggestion.
-    suggested_route = route_for_topic(topic)
+    # Route validée par l'app (jamais par le LLM), via detect_topic sur la question.
+    # Pas de fallback sémantique sur l'entity_type du meilleur chunk : une question
+    # hors sujet peut retourner un chunk, une route sans rapport serait pire que rien.
+    # Si tous les chunks retrouvés appartiennent au même projet précis, on pointe
+    # vers sa page dédiée (/project/<id>) plutôt que la liste générale.
+    project_entity_id = None
+    if not is_exhaustive and retrieved:
+        first_meta = retrieved[0]["metadata"]
+        if first_meta.get("entity_type") == "project":
+            candidate_id = first_meta.get("entity_id")
+            if candidate_id and all(item["metadata"].get("entity_id") == candidate_id for item in retrieved):
+                project_entity_id = candidate_id
+
+    suggested_route = route_for_topic(topic, project_entity_id=project_entity_id)
     metrics["suggested_route"] = suggested_route
 
     t0 = time.perf_counter()

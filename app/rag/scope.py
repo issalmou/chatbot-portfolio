@@ -39,13 +39,10 @@ def _has_personal_reference(query: str, lang: str) -> bool:
     return bool(pattern and pattern.search(query))
 
 
-# Question sur l'IDENTITÉ DE L'ASSISTANT lui-même ("qui es-tu ?"), pas sur
-# Issalmou ("qui est Issalmou ?") : distinction faite via la 2e personne
-# (tu/vous/your/أنت), jamais 3e personne (il/son/his) — voir
-# _PERSONAL_REFERENCE_PATTERNS ci-dessus pour l'inverse. Vérifiée avant tout
-# le reste du pipeline (app/rag/retrieval.py) : ne doit jamais déclencher
-# Chroma/le LLM, pour que le contenu du portfolio ne puisse jamais influencer
-# la réponse sur ce que le chatbot EST.
+# Identité de l'ASSISTANT ("qui es-tu ?"), jamais d'Issalmou ("qui est
+# Issalmou ?") : distinction via la 2e personne (tu/vous/your/أنت), jamais la
+# 3e (il/son/his, voir _PERSONAL_REFERENCE_PATTERNS). Court-circuitée avant
+# Chroma/le LLM dans app/rag/retrieval.py.
 _IDENTITY_QUESTION_PATTERNS: dict[str, re.Pattern] = {
     "en": re.compile(
         r"\b(who\s+are\s+you|who\s+am\s+i\s+(?:talking|speaking)\s+(?:to|with)|"

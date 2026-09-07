@@ -29,6 +29,23 @@ def test_projects_topic_routes_to_projects_page():
     assert route_for_topic("projects") == "/projects"
 
 
+def test_projects_topic_with_specific_entity_routes_to_its_detail_page():
+    # Un projet précis identifié (entity_id) doit pointer vers sa page
+    # dédiée (/project/<id>, route React Router réelle) plutôt que la liste
+    # générale — sinon le LLM n'a aucune URL précise à proposer.
+    assert route_for_topic("projects", project_entity_id="agep") == "/project/agep"
+
+
+def test_projects_topic_without_entity_still_routes_to_general_list():
+    assert route_for_topic("projects", project_entity_id=None) == "/projects"
+
+
+def test_project_entity_id_ignored_for_other_topics():
+    # project_entity_id n'a de sens que pour le topic "projects" : ignoré
+    # ailleurs pour ne jamais produire une route incohérente.
+    assert route_for_topic("skills", project_entity_id="agep") == "/about#skills"
+
+
 def test_experience_and_education_both_route_to_resume():
     assert route_for_topic(detect_topic("What is his work experience?", "en")) == "/resume"
     assert route_for_topic(detect_topic("Where did he study?", "en")) == "/resume"
