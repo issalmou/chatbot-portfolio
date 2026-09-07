@@ -12,24 +12,10 @@ RUN apt-get update \
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 COPY requirements.txt .
-# torch CPU installé en premier, version fixée : le wheel par défaut sur
-# PyPI déclare cuda-toolkit/nvidia-* comme dépendances obligatoires sur
-# Linux (même sans GPU) — E5 tourne entièrement sur CPU (app/config.py).
-# Une fois installé, requirements.txt le trouve déjà satisfaisant et ne le
-# retélécharge jamais depuis l'index par défaut.
-RUN pip install --no-cache-dir torch==2.14.0+cpu --index-url https://download.pytorch.org/whl/cpu \
-    && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY main.py .
-
-# Pré-télécharge les poids E5 dans l'image : démarrage sans dépendre du
-# réseau vers huggingface.co (cold start plus rapide et fiable).
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('intfloat/multilingual-e5-base')"
-
-# Sans ça, huggingface_hub vérifie les métadonnées du modèle en ligne à
-# chaque démarrage même avec les poids déjà en cache local.
-ENV HF_HUB_OFFLINE=1
 
 # Aucune donnée locale : la persistance RAG vit entièrement dans Chroma
 # Cloud. translations.js n'est pas copié ici, le contenu passe par

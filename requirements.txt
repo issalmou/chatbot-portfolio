@@ -17,7 +17,6 @@ python-multipart==0.0.30
 # jamais de serveur/AuthorizationProvider local : non exploitable ici.
 chromadb==1.5.9
 google-genai==1.52.0
-sentence-transformers==6.0.1
 httpx==0.28.1
 langdetect==1.0.9
 json5==0.15.0

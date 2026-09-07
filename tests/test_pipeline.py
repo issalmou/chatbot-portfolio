@@ -121,12 +121,12 @@ def test_embedding_failure_rolls_back_and_keeps_old_version(tmp_store, fake_embe
 
 
 @pytest.mark.skipif(
-    not settings.chroma_api_key,
-    reason="Test d'intégration réel : nécessite CHROMA_API_KEY (Chroma Cloud).",
+    not (settings.chroma_api_key and settings.hf_token),
+    reason="Test d'intégration réel : nécessite CHROMA_API_KEY et HF_TOKEN.",
 )
 def test_real_chroma_cloud_roundtrip():
     """TEST RÉEL (aucun mock) : connexion Chroma Cloud + embeddings E5
-    réels (modèle local, chargé une fois). Utilise une collection DÉDIÉE aux
+    réels (API Hugging Face Inference). Utilise une collection DÉDIÉE aux
     tests (jamais `portfolio_rag_e5`, la collection de production), pour ne
     jamais écraser les vraies données — les chunk_id sont déterministes et
     collisionneraient avec les chunks réels si on utilisait la même

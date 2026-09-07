@@ -6,15 +6,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    # Embeddings : E5 multilingue local (MIT, dim. réelle 768, 100 langues dont
-    # fr/en/ar), indépendant du fallback LLM de génération — aucun appel réseau à l'inférence.
+    # Embeddings : E5 multilingue (MIT, dim. 768, 100 langues dont fr/en/ar) via
+    # l'API Hugging Face Inference Providers plutôt qu'un chargement local — un
+    # conteneur avec torch/sentence-transformers dépasse largement les 512 Mo de
+    # RAM des hébergeurs gratuits. Vérifié en direct : vecteurs numériquement
+    # identiques (cosinus ~1.0) à une inférence locale du même modèle, donc
+    # aucune migration de données nécessaire (voir app/embeddings/e5_provider.py).
     embedding_model_id: str = "intfloat/multilingual-e5-base"
     # À incrémenter si la logique d'encodage change sans changer de modèle (clé de cache).
     embedding_model_version: str = "1"
-    embedding_device: str = "cpu"
-    # Dimension mesurée du modèle, utilisée pour le vecteur de remplissage des
-    # métadonnées internes à Chroma (voir chroma_store.py) — pas pour valider les vecteurs réels.
+    # Dimension du modèle, utilisée pour le vecteur de remplissage des métadonnées
+    # internes à Chroma (voir chroma_store.py) — pas pour valider les vecteurs réels.
     embedding_dimension: int = 768
+    hf_token: str | None = None
+    embedding_request_timeout_seconds: float = 12.0
 
     # Fournisseurs LLM de génération, ordre de fallback strict : Gemini -> Mistral
     # -> Groq -> OpenAI. Un provider sans clé API est simplement ignoré (app/llm/manager.py).

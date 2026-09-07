@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
 
 from app.config import settings
-from app.embeddings.e5_provider import e5_embedding_provider
+from app.embeddings.e5_provider import EmbeddingProviderError, e5_embedding_provider
 from app.ingestion.pipeline import IngestionError, ingest_portfolio
 from app.llm.manager import llm_manager
 from app.rag.memory import Turn
@@ -60,14 +60,14 @@ async def lifespan(_app: FastAPI):
             "sans authentification. À éviter en production."
         )
 
-    # Précharge E5 au démarrage plutôt qu'à la première requête : un
-    # déploiement lent est préférable à une première réponse chatbot lente.
+    # Vérifie l'API d'embedding (HF_TOKEN valide, modèle joignable) au démarrage
+    # plutôt qu'à la première requête utilisateur.
     try:
         t0 = time.perf_counter()
         e5_embedding_provider.embed_query("warmup")
-        logger.info("Modèle d'embedding E5 chargé en %.2fs.", time.perf_counter() - t0)
+        logger.info("API d'embedding vérifiée en %.2fs.", time.perf_counter() - t0)
     except Exception as exc:
-        logger.warning("Préchargement du modèle E5 échoué (%s: %s) — sera retenté à la demande.", type(exc).__name__, exc)
+        logger.warning("Vérification de l'API d'embedding échouée (%s: %s) — sera retentée à la demande.", type(exc).__name__, exc)
 
     path = settings.translations_js_path
     if not path or not os.path.exists(path):
@@ -149,6 +149,9 @@ async def chat_endpoint(request: ChatRequest):
     except ChromaUnavailableError:
         logger.error("Chroma Cloud injoignable pendant /chatbot.")
         raise HTTPException(status_code=503, detail="La base documentaire est temporairement indisponible.")
+    except EmbeddingProviderError as exc:
+        logger.error("API d'embedding indisponible pendant /chatbot: %s", exc)
+        raise HTTPException(status_code=503, detail="Le service d'embedding est temporairement indisponible.")
 
     logger.info(
         "chat lang=%s scope=%s intent=%s topic=%s suggested_route=%s entity_type=%s "

@@ -63,7 +63,7 @@ ou intégrer** ce backend, pas seulement pour son auteur d'origine.
 translations.js (frontend)
    │  parse (JSON5, jamais exécuté) + chunking + hash SHA-256
    ▼
-Embeddings E5 multilingue LOCAL (intfloat/multilingual-e5-base, aucune clé requise)
+Embeddings E5 multilingue via l'API Hugging Face Inference (intfloat/multilingual-e5-base, HF_TOKEN requis)
    ▼
 Chroma Cloud (base vectorielle distante — aucune persistance locale)
    │
@@ -88,8 +88,8 @@ cache (embedding / retrieval / réponse — thread-safe, invalidé au contenu)
 réponse JSON
 ```
 
-L'embedding (E5, local) est **totalement indépendant** du fallback LLM de
-génération : changer de provider de génération n'affecte jamais les
+L'embedding (E5, via API HF) est **totalement indépendant** du fallback LLM
+de génération : changer de provider de génération n'affecte jamais les
 embeddings, et inversement.
 
 ## Démarrage rapide
@@ -98,13 +98,13 @@ embeddings, et inversement.
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env   # renseignez au moins GEMINI_API_KEY + CHROMA_API_KEY
+cp .env.example .env   # renseignez au moins GEMINI_API_KEY + CHROMA_API_KEY + HF_TOKEN
 uvicorn main:app --reload
 ```
 
-Le premier démarrage télécharge le modèle E5 (~280 Mo, mis en cache par
-`sentence-transformers`) ; les démarrages suivants le chargent depuis le
-cache local (quelques secondes). Le serveur écoute sur `http://localhost:8000`.
+Aucun modèle téléchargé ni chargé en mémoire localement : les embeddings
+passent par un appel HTTP à l'API Hugging Face Inference à chaque demande
+(voir app/embeddings/e5_provider.py). Le serveur écoute sur `http://localhost:8000`.
 
 Vérifiez rapidement que tout fonctionne :
 
@@ -137,6 +137,7 @@ démarrage) ; n'utilisez jamais une valeur placeholder du type `"..."`.
 | `CHROMA_API_KEY` | **Oui** | Clé API [Chroma Cloud](https://www.trychroma.com/) |
 | `CHROMA_TENANT`, `CHROMA_DATABASE` | Non (souvent auto-résolues) | À renseigner explicitement si Chroma répond `ChromaAuthError: Could not determine a database name...` |
 | `CHROMA_COLLECTION_NAME` | **Oui, avec cette valeur exacte** | ⚠️ **`portfolio_rag_e5`** — voir l'avertissement ci-dessous |
+| `HF_TOKEN` | **Oui** | Token Hugging Face (permission "Inference Providers") pour l'API d'embedding E5 — [générer ici](https://huggingface.co/settings/tokens) |
 | `GEMINI_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`, `OPENAI_API_KEY` | Au moins un provider requis | Ordre de fallback fixe : Gemini → Mistral → Groq → OpenAI |
 | `TRANSLATIONS_JS_PATH` | Non | Chemin local vers `translations.js` pour l'initialisation automatique au démarrage ; laissez vide en production (utilisez `POST /upload-content`) |
 | `CONTENT_UPLOAD_TOKEN` | Recommandé en production | Protège `POST /upload-content` (`Authorization: Bearer <token>`) ; si vide, l'endpoint reste ouvert (dev local uniquement, un avertissement est loggé) |
@@ -304,11 +305,11 @@ curl -X POST http://localhost:8000/chatbot \
 
 ## Limites connues
 
-- Un seul worker Uvicorn est utilisé volontairement (le modèle E5 est
-  chargé en mémoire ; plusieurs workers en multiplieraient la consommation
-  RAM sans bénéfice d'isolation, déjà garantie par ailleurs). Les requêtes
-  `/chatbot` sont exécutées via un threadpool (`run_in_threadpool`), donc
-  réellement concurrentes malgré le worker unique.
+- Un seul worker Uvicorn est utilisé volontairement (les caches et le
+  circuit breaker LLM vivent en mémoire process ; plusieurs workers
+  fragmenteraient cet état sans bénéfice d'isolation, déjà garantie par
+  ailleurs). Les requêtes `/chatbot` sont exécutées via un threadpool
+  (`run_in_threadpool`), donc réellement concurrentes malgré le worker unique.
 - La classification de périmètre et la résolution de référence restent des
   heuristiques locales (mots-clés/regex), pas un classifieur appris —
   robustes sur tous les cas testés, mais une formulation très inhabituelle
