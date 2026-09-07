@@ -1,11 +1,20 @@
 # requirements.txt
 
-fastapi==0.129.0
+fastapi==0.134.0
+# starlette : épinglé explicitement (pas seulement transitif via fastapi) —
+# fastapi<0.134.0 imposait starlette<1.0.0, incompatible avec le correctif
+# de CVE-2026-54283/CVE-2026-48818 (DoS/SSRF), corrigés à partir de 1.1.0/1.3.1.
+starlette==1.3.1
 uvicorn==0.40.0
 python-dotenv==1.2.1
 pydantic==2.12.5
 pydantic-settings==2.14.0
-python-multipart==0.0.22
+# 0.0.22 était vulnérable à CVE-2026-53539/CVE-2026-42561 (DoS), corrigés en 0.0.30.
+python-multipart==0.0.30
+# chromadb 1.5.9 a 4 CVE connues (2 critiques), mais toutes concernent le
+# serveur chromadb auto-hébergé (RCE via trust_remote_code, RBAC mal scopé) —
+# nous n'utilisons que chromadb.CloudClient (voir app/vectorstore/chroma_store.py),
+# jamais de serveur/AuthorizationProvider local : non exploitable ici.
 chromadb==1.5.9
 google-genai==1.52.0
 sentence-transformers==6.0.1

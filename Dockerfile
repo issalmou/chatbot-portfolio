@@ -1,7 +1,4 @@
-# Python 3.12 : version stable largement supportée par les dépendances
-# (chromadb/onnxruntime). L'environnement de développement local tournait en
-# 3.14, où chromadb==1.3.5 s'est révélé incompatible (voir rapport final) ;
-# 3.12 évite ce type de risque de compatibilité de dépendances en production.
+# 3.12 : chromadb==1.3.5 s'est révélé incompatible avec 3.14 (dev local).
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -10,33 +7,33 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
+# pip/setuptools/wheel outils de build uniquement (jamais importés au runtime),
+# mais corrige des CVE connues (setuptools path traversal, wheel path traversal).
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
 COPY requirements.txt .
-# torch CPU installé explicitement en premier (index dédié) : les embeddings
-# E5 tournent en local sur CPU pour ce projet, la build CUDA par défaut sur
-# Linux serait plusieurs fois plus volumineuse pour aucun bénéfice ici.
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+# torch CPU installé en premier, version fixée : le wheel par défaut sur
+# PyPI déclare cuda-toolkit/nvidia-* comme dépendances obligatoires sur
+# Linux (même sans GPU) — E5 tourne entièrement sur CPU (app/config.py).
+# Une fois installé, requirements.txt le trouve déjà satisfaisant et ne le
+# retélécharge jamais depuis l'index par défaut.
+RUN pip install --no-cache-dir torch==2.14.0+cpu --index-url https://download.pytorch.org/whl/cpu \
     && pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY main.py .
 
-# Pré-télécharge les poids du modèle E5 dans l'image : le conteneur démarre
-# alors sans dépendre du réseau vers huggingface.co (cold start plus rapide
-# et plus fiable qu'un téléchargement à la première requête).
+# Pré-télécharge les poids E5 dans l'image : démarrage sans dépendre du
+# réseau vers huggingface.co (cold start plus rapide et fiable).
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('intfloat/multilingual-e5-base')"
 
-# Vérifié en direct : même avec les poids déjà en cache local,
-# sentence-transformers/huggingface_hub fait par défaut des requêtes HEAD/GET
-# vers huggingface.co à CHAQUE démarrage pour vérifier les métadonnées. En
-# production, le modèle étant déjà figé dans cette image, on force le mode
-# 100% hors-ligne : aucune dépendance réseau à huggingface.co au runtime.
+# Sans ça, huggingface_hub vérifie les métadonnées du modèle en ligne à
+# chaque démarrage même avec les poids déjà en cache local.
 ENV HF_HUB_OFFLINE=1
 
-# Aucun répertoire de données local : la persistance RAG (chunks, embeddings,
-# métadonnées) vit entièrement dans Chroma Cloud (voir app/vectorstore).
-# translations.js n'est pas copié dans l'image : le contenu initial est
-# fourni via POST /upload-content, ou via TRANSLATIONS_JS_PATH si ce chemin
-# est monté explicitement dans le conteneur.
+# Aucune donnée locale : la persistance RAG vit entièrement dans Chroma
+# Cloud. translations.js n'est pas copié ici, le contenu passe par
+# POST /upload-content (ou TRANSLATIONS_JS_PATH si monté explicitement).
 
 EXPOSE 8000
 
