@@ -33,7 +33,7 @@ from app.llm.base import LLMMessage, LLMProviderError
 from app.llm.manager import LLMProviderManager, llm_manager
 from app.rag.intent import detect_list_intent, resolve_entity_type_keyword
 from app.rag.memory import Turn, resolve_reference
-from app.rag.scope import Scope, classify_scope
+from app.rag.scope import Scope, classify_scope, detect_identity_question
 from app.rag.sections import detect_topic, route_for_topic
 from app.vectorstore.chroma_store import ChromaStore, chroma_store
 
@@ -167,6 +167,32 @@ _CLARIFICATION_VARIANTS: dict[str, list[str]] = {
     ],
 }
 
+# Question sur l'identité de l'assistant lui-même ("qui es-tu ?") : jamais le
+# nom brut du chatbot ("Vous parlez avec ChatIssalmou Assistant AI"), toujours
+# une formulation naturelle qui explique son rôle. Court-circuit déterministe
+# AVANT toute résolution de référence/sujet/périmètre (voir answer_question) :
+# ni la conversation ni le contenu du portfolio ne doivent jamais influencer
+# cette réponse. Deux registres par langue (complet / plus direct pour une
+# question très courte) mélangés dans la même liste : _stable_pick() varie
+# naturellement entre les deux selon la question, sans heuristique de longueur.
+_IDENTITY_VARIANTS: dict[str, list[str]] = {
+    "fr": [
+        "Je suis l'assistant IA du portfolio d'Issalmou. Je peux vous aider à "
+        "découvrir son parcours, ses projets, ses compétences et son expérience.",
+        "Je suis l'assistant IA du portfolio d'Issalmou. Que souhaitez-vous découvrir ?",
+    ],
+    "en": [
+        "I'm the AI assistant of Issalmou's portfolio. I can help you explore his "
+        "background, projects, skills, and experience.",
+        "I'm the AI assistant of Issalmou's portfolio. What would you like to explore?",
+    ],
+    "ar": [
+        "أنا المساعد الذكي الخاص بمحفظة أعمال إسلامو. يمكنني مساعدتك في اكتشاف "
+        "مساره ومشاريعه ومهاراته وخبراته.",
+        "أنا المساعد الذكي لمحفظة أعمال إسلموا. ماذا ترغب في اكتشافه؟",
+    ],
+}
+
 # Hors-sujet : court-circuit déterministe, symétrique au fallback "info manquante".
 _OUT_OF_SCOPE_VARIANTS: dict[str, list[str]] = {
     "fr": [
@@ -259,6 +285,23 @@ def answer_question(
     t0 = time.perf_counter()
     lang = detect_language(query)
     metrics["language_detection_ms"] = round((time.perf_counter() - t0) * 1000, 2)
+
+    # Question sur l'identité de l'assistant lui-même : court-circuit avant
+    # TOUT le reste (mémoire, sujet, périmètre, Chroma, LLM) — voir
+    # _IDENTITY_VARIANTS ci-dessus. Jamais influencée par la conversation ni
+    # par le contenu du portfolio, par construction.
+    if detect_identity_question(query, lang):
+        answer = _stable_pick(_IDENTITY_VARIANTS.get(lang, _IDENTITY_VARIANTS["fr"]), query)
+        metrics["intent"] = "identity"
+        metrics["scope"] = "identity"
+        metrics["provider"] = None
+        metrics["model"] = None
+        metrics["fallback_used"] = False
+        metrics["embedding_ms"] = 0.0
+        metrics["retrieval_ms"] = 0.0
+        metrics["generation_ms"] = 0.0
+        metrics["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+        return AnswerResult(response=answer, lang=lang, metrics=metrics)
 
     resolution = resolve_reference(query, lang, conversation)
     metrics["reference_resolved"] = resolution.applied

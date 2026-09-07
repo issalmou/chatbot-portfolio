@@ -4,7 +4,8 @@ from app.cache.caches import embedding_cache, response_cache, retrieval_cache
 from app.ingestion.pipeline import ingest_portfolio
 from app.llm.base import LLMMessage, LLMProviderError, ERROR_AUTH
 from app.llm.manager import LLMProviderManager
-from app.rag.retrieval import AllProvidersUnavailableError, answer_question
+from app.rag.memory import Turn
+from app.rag.retrieval import AllProvidersUnavailableError, _IDENTITY_VARIANTS, answer_question
 from tests.conftest import FakeLLMProvider
 
 JS_SAMPLE = """
@@ -266,3 +267,89 @@ def test_all_providers_unavailable_raises_dedicated_error(seeded_store, fake_emb
 
     with pytest.raises(AllProvidersUnavailableError):
         answer_question("Quels projets ?", embedder=fake_embedder, store=seeded_store, manager=manager)
+
+
+# --- Question sur l'identité de l'assistant : court-circuit total avant
+# mémoire/Chroma/LLM (voir _IDENTITY_VARIANTS dans app/rag/retrieval.py) ---
+
+class _PoisonedStore:
+    """Double de ChromaStore dont CHAQUE méthode lève : prouve qu'une
+    question d'identité n'accède jamais à Chroma, même pas pour lire la
+    version du contenu."""
+
+    def __getattr__(self, name):
+        def _boom(*args, **kwargs):
+            raise AssertionError(f"Chroma ne devrait jamais être appelé (méthode '{name}') pour une question d'identité.")
+        return _boom
+
+
+class _PoisonedEmbedder:
+    """Double dont chaque méthode lève : prouve qu'une question d'identité
+    n'appelle jamais le modèle d'embedding."""
+
+    def embed_query(self, text):
+        raise AssertionError("l'embedder ne devrait jamais être appelé pour une question d'identité.")
+
+    def embed_documents(self, texts):
+        raise AssertionError("l'embedder ne devrait jamais être appelé pour une question d'identité.")
+
+
+IDENTITY_QUESTIONS_BY_LANG = {
+    "fr": ["Avec qui je parle ?", "Qui es-tu ?", "Comment tu t'appelles ?", "Quel est ton nom ?"],
+    "en": ["Who am I talking to?", "Who are you?", "What's your name?"],
+    "ar": ["من أنت؟", "مع من أتحدث؟", "ما اسمك؟"],
+}
+
+
+@pytest.mark.parametrize(
+    "lang,query",
+    [(lang, q) for lang, queries in IDENTITY_QUESTIONS_BY_LANG.items() for q in queries],
+)
+def test_identity_question_never_touches_chroma_embedder_or_llm(lang, query):
+    gemini = FakeLLMProvider("gemini")
+    manager = LLMProviderManager([gemini], cooldown_seconds=60)
+
+    result = answer_question(
+        query, embedder=_PoisonedEmbedder(), store=_PoisonedStore(), manager=manager,
+    )
+
+    assert result.lang == lang
+    assert result.response in _IDENTITY_VARIANTS[lang]
+    assert result.metrics["intent"] == "identity"
+    assert gemini.call_count == 0
+
+
+def test_identity_question_response_never_contains_raw_bot_name():
+    gemini = FakeLLMProvider("gemini")
+    manager = LLMProviderManager([gemini], cooldown_seconds=60)
+    result = answer_question("Who are you?", embedder=_PoisonedEmbedder(), store=_PoisonedStore(), manager=manager)
+    assert "ChatIssalmou" not in result.response
+
+
+def test_identity_question_ignores_conversation_history():
+    # Une conversation antérieure sur un projet précis ne doit jamais faire
+    # dévier la réponse d'identité vers ce projet (jamais de RAG ici).
+    gemini = FakeLLMProvider("gemini")
+    manager = LLMProviderManager([gemini], cooldown_seconds=60)
+    conversation = [
+        Turn(role="user", content="Tell me about project AGEP."),
+        Turn(role="assistant", content="AGEP is a web platform for paramedical teams."),
+    ]
+    result = answer_question(
+        "Who are you?", embedder=_PoisonedEmbedder(), store=_PoisonedStore(), manager=manager, conversation=conversation,
+    )
+    assert result.response in _IDENTITY_VARIANTS["en"]
+    assert gemini.call_count == 0
+
+
+def test_identity_question_is_not_influenced_by_portfolio_content(seeded_store, fake_embedder):
+    # Même avec une vraie base de contenu disponible, la question d'identité
+    # ne doit jamais atteindre le retrieval ni la génération. `seeded_store`
+    # appelle déjà l'embedder une fois pendant l'ingestion (setup) : on
+    # compare un delta, pas une valeur absolue.
+    calls_before = fake_embedder.call_count
+    manager, gemini = _manager(reply="Ceci ne devrait jamais être renvoyé.")
+    result = answer_question("Qui es-tu ?", embedder=fake_embedder, store=seeded_store, manager=manager)
+    assert result.response in _IDENTITY_VARIANTS["fr"]
+    assert gemini.call_count == 0
+    assert fake_embedder.call_count == calls_before

@@ -7,7 +7,7 @@ import pytest
 from app.language import detect_language
 from app.rag.intent import detect_list_intent
 from app.rag.memory import resolve_reference
-from app.rag.scope import Scope, classify_scope
+from app.rag.scope import Scope, classify_scope, detect_identity_question
 from app.rag.sections import detect_topic
 
 
@@ -129,3 +129,58 @@ def test_contextual_react_question_with_possessive_is_portfolio_related():
 
 def test_ambiguous_without_any_context():
     assert _classify("Tell me more about it", "en", conversation=[]) == Scope.AMBIGUOUS
+
+
+# --- Question sur l'identité de l'assistant lui-même (pas sur Issalmou) ---
+
+IDENTITY_QUESTIONS_EN = [
+    "Who am I talking to?",
+    "Who are you?",
+    "What's your name?",
+    "What is your name?",
+]
+
+IDENTITY_QUESTIONS_FR = [
+    "Avec qui je parle ?",
+    "Qui es-tu ?",
+    "Qui êtes-vous ?",
+    "Comment tu t'appelles ?",
+    "Quel est ton nom ?",
+]
+
+IDENTITY_QUESTIONS_AR = [
+    "من أنت؟",
+    "مع من أتحدث؟",
+    "ما اسمك؟",
+]
+
+
+@pytest.mark.parametrize("query", IDENTITY_QUESTIONS_EN)
+def test_identity_question_detected_english(query):
+    assert detect_identity_question(query, "en") is True
+
+
+@pytest.mark.parametrize("query", IDENTITY_QUESTIONS_FR)
+def test_identity_question_detected_french(query):
+    assert detect_identity_question(query, "fr") is True
+
+
+@pytest.mark.parametrize("query", IDENTITY_QUESTIONS_AR)
+def test_identity_question_detected_arabic(query):
+    assert detect_identity_question(query, "ar") is True
+
+
+# --- Piège : une question sur ISSALMOU (3e personne) n'est jamais une
+# question d'identité de l'assistant (2e personne) ---
+
+def test_question_about_issalmou_is_not_an_identity_question_english():
+    assert detect_identity_question("Who is Issalmou?", "en") is False
+
+
+def test_question_about_issalmou_is_not_an_identity_question_french():
+    assert detect_identity_question("Qui est Issalmou ?", "fr") is False
+    assert detect_identity_question("Quel est son nom ?", "fr") is False
+
+
+def test_question_about_issalmou_is_not_an_identity_question_arabic():
+    assert detect_identity_question("من هو إسلمو؟", "ar") is False
